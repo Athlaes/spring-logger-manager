@@ -1,0 +1,90 @@
+<mat-card class="panel loggers-panel app-card">
+  <mat-card-header>
+    <mat-card-title>Loggers Spring</mat-card-title>
+    <mat-card-subtitle>
+      Liste filtrable des loggers avec changement de niveau immédiat.
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="loggers-toolbar">
+      <mat-form-field appearance="outline" class="filter">
+        <mat-label>Filtrer les loggers</mat-label>
+        <input matInput [formControl]="filterForm.controls.search" placeholder="Exemple: org.springframework" />
+        @if (filterForm.controls.search.value) {
+          <button mat-icon-button matSuffix type="button" aria-label="Effacer le filtre" (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <div class="toolbar-actions">
+        <span class="loggers-count">{{ loggerCountLabel() }}</span>
+        <button mat-stroked-button type="button" [disabled]="session() === null || isBusy()" (click)="refreshLoggers()">
+          Rafraîchir
+        </button>
+      </div>
+    </div>
+
+    @if (isLoadingLoggers()) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    @if (requestError(); as requestErrorMessage) {
+      <div class="feedback feedback--error" aria-live="assertive">
+        <mat-icon>error</mat-icon>
+        <span>{{ requestErrorMessage }}</span>
+      </div>
+    }
+
+    @if (session() === null) {
+      <div class="empty-state">
+        <mat-icon>vpn_key</mat-icon>
+        <h2 class="title">Connectez-vous pour charger les loggers</h2>
+        <p class="description">
+          Une fois la cible Spring configurée, l'application interrogera l'endpoint Actuator pour afficher
+          tous les loggers disponibles.
+        </p>
+      </div>
+    } @else if (filteredLoggers().length === 0) {
+      <div class="empty-state">
+        <mat-icon>search_off</mat-icon>
+        <h2 class="title">Aucun logger à afficher</h2>
+        <p class="description">Vérifiez le filtre courant ou rechargez la liste après authentification.</p>
+      </div>
+    } @else {
+      <ul class="logger-list">
+        @for (logger of filteredLoggers(); track logger.name) {
+          <li class="logger-row">
+            <div class="meta">
+              <div>
+                <h3 class="title">{{ logger.name }}</h3>
+              </div>
+
+              @if (activeLoggerUpdate() === logger.name) {
+                <span class="status">Mise à jour...</span>
+              }
+            </div>
+
+            <div class="actions" aria-label="Niveaux disponibles">
+              @for (level of actionLevels(); track level) {
+                <button
+                  mat-stroked-button
+                  type="button"
+                  class="level-button"
+                  [class]="levelClass(level)"
+                  [class.active]="isLevelSelected(logger, level)"
+                  [class.effective]="isEffectiveLevel(logger, level)"
+                  [disabled]="isBusy()"
+                  (click)="updateLoggerLevel(logger, level)"
+                >
+                  {{ level }}
+                </button>
+              }
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </mat-card-content>
+</mat-card>

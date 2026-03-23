@@ -1,0 +1,121 @@
+:host {
+  display: block;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+  gap: 1.75rem;
+
+  .panel {
+    border: 1px solid var(--app-panel-border);
+    box-shadow: var(--app-panel-shadow);
+
+    &.aside {
+      align-self: start;
+    }
+  }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .toggle-section {
+    display: grid;
+    gap: 0.75rem;
+
+    .section-label {
+      color: #1f3522;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .toggle-group {
+      width: fit-content;
+      max-width: 100%;
+      overflow: auto;
+    }
+  }
+
+  .hint-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    background: var(--app-surface-info);
+    color: var(--app-text-strong);
+
+    .text {
+      margin: 0;
+      line-height: 1.6;
+    }
+  }
+
+  .connection-form {
+    display: grid;
+    gap: 1.25rem;
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      .primary-action {
+        background: #2e7d32;
+        padding: 0.85rem 1.35rem;
+      }
+    }
+
+    .feedback {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-radius: 1rem;
+
+      &--error {
+        border: 1px solid rgb(198 40 40 / 0.16);
+        background: rgb(255 235 238 / 0.85);
+        color: #8e0000;
+      }
+    }
+  }
+
+  .status-list {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    > div {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .label {
+      color: var(--app-text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+  }
+}
+
+@media (max-width: 1100px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .dashboard {
+    gap: 1.25rem;
+
+    .field-grid,
+    .status-list {
+      grid-template-columns: 1fr;
+    }
+  }
+}

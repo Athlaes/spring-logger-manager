@@ -1,0 +1,2 @@
+### Get loggers
+GET http://localhost:8080/management/loggers

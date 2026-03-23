@@ -1,0 +1,34 @@
+<mat-toolbar class="toolbar">
+  <div class="brand">
+    <mat-icon>tune</mat-icon>
+    <span>Spring Logger Manager</span>
+  </div>
+
+  <span class="spacer"></span>
+
+  <span class="connection-pill" [class.connected]="session() !== null">
+    @if (session() !== null) {
+      Connecté
+    } @else {
+      Hors ligne
+    }
+  </span>
+</mat-toolbar>
+
+<main class="page">
+  <section class="hero">
+    <p class="eyebrow">Angular Material · Spring Boot Actuator</p>
+    <h1 class="title">Supervisez vos loggers Spring depuis une interface unique.</h1>
+    <p class="description">
+      Renseignez l'URL de l'application Spring, choisissez le mode d'authentification approprié, puis
+      chargez les loggers pour ajuster leur niveau en un clic.
+    </p>
+  </section>
+
+  <app-logger-authentication
+    (connected)="handleConnected($event)"
+    (configurationChanged)="handleConfigurationChanged()"
+  />
+
+  <app-logger-management [settings]="settings()" [session]="session()" />
+</main>

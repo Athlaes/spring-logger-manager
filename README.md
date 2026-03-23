@@ -1,59 +1,57 @@
-# SpringLoggerManager
+# Spring Logger Manager
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.3.
+Frontend Angular Material pour piloter les loggers d'une application Spring Boot exposant Actuator.
 
-## Development server
+## Fonctionnalites
 
-To start a local development server, run:
+- Saisie de l'URL de l'application Spring et du chemin Actuator, par exemple `/actuator` ou `/management`.
+- Authentification multi-mode:
+  - bearer direct,
+  - basic user/password,
+  - bearer via client credentials,
+  - bearer via basic token client.
+- Chargement de la liste des loggers avec affichage des niveaux configures et effectifs.
+- Changement de niveau en un clic.
+- Theme Angular Material inspire de Spring avec dominante verte.
+- Deploiement GitHub Pages via GitHub Actions.
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Demarrage local
 
 ```bash
-ng generate --help
+npm install
+npm start
 ```
 
-## Building
+L'application est ensuite disponible sur `http://localhost:4200/`.
 
-To build the project run:
+## Scripts utiles
 
 ```bash
-ng build
+npm run build
+npm run test -- --run
+npm run build:pages
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+`build:pages` genere un build pret pour GitHub Pages avec un `base-href` adapte au depot `spring-logger-manager`.
 
-## Running unit tests
+## Utilisation
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+1. Saisir l'URL de base de l'application Spring.
+2. Saisir le chemin Actuator expose.
+3. Choisir le mode d'authentification approprie.
+4. Cliquer sur **Se connecter et charger les loggers**.
+5. Filtrer la liste si besoin puis cliquer sur un niveau pour mettre a jour un logger.
 
-```bash
-ng test
-```
+## Deploiement GitHub Pages
 
-## Running end-to-end tests
+Le workflow `.github/workflows/deploy-pages.yml`:
 
-For end-to-end (e2e) testing, run:
+- installe les dependances,
+- lance les tests,
+- build l'application,
+- publie le contenu de `dist/spring-logger-manager/browser` sur GitHub Pages.
 
-```bash
-ng e2e
-```
+## Point d'attention CORS
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Comme l'application est deployee en frontend statique sur GitHub Pages, l'API Spring cible doit autoriser
+les requetes CORS depuis le domaine GitHub Pages utilise pour l'hebergement.

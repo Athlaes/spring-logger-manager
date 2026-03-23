@@ -1,0 +1,215 @@
+<section class="dashboard">
+  <mat-card class="panel app-card">
+    <mat-card-header class="panel-header">
+      <mat-card-title>Connexion</mat-card-title>
+      <mat-card-subtitle>URL cible, endpoint Actuator et mode d'accès.</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form class="connection-form" [formGroup]="connectionForm" (ngSubmit)="submitConnection()">
+        <div class="field-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>URL de l'application Spring</mat-label>
+            <input matInput formControlName="baseUrl" placeholder="https://api.mon-domaine.fr" />
+            <mat-hint>Incluez le protocole, par exemple `https://` ou `http://localhost:8080`.</mat-hint>
+            @if (connectionForm.controls.baseUrl.touched && connectionForm.controls.baseUrl.hasError('required')) {
+              <mat-error>L'URL de base est obligatoire.</mat-error>
+            }
+            @if (connectionForm.controls.baseUrl.touched && connectionForm.controls.baseUrl.hasError('httpUrl')) {
+              <mat-error>Saisissez une URL HTTP(S) valide.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Chemin Actuator</mat-label>
+            <input matInput formControlName="actuatorPath" placeholder="/management" />
+            <mat-hint>Exemples: `/actuator`, `/management`, `/managements`.</mat-hint>
+            @if (connectionForm.controls.actuatorPath.touched && connectionForm.controls.actuatorPath.hasError('required')) {
+              <mat-error>Le chemin Actuator est obligatoire.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="toggle-section">
+          <span class="section-label">Mode d'authentification</span>
+          <mat-button-toggle-group formControlName="authMode" class="toggle-group" aria-label="Mode d'authentification">
+            <mat-button-toggle value="no-auth">No authentication</mat-button-toggle>
+            <mat-button-toggle value="direct-bearer">Bearer direct</mat-button-toggle>
+            <mat-button-toggle value="basic-auth">Basic</mat-button-toggle>
+            <mat-button-toggle value="oauth-client-credentials">Service account</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+
+        @if (authMode() === 'no-auth') {
+          <div class="hint-box" aria-live="polite">
+            <mat-icon>info</mat-icon>
+            <p class="text">Aucun header d'authentification ne sera envoyé aux endpoints Actuator.</p>
+          </div>
+        }
+
+        @if (authMode() === 'direct-bearer') {
+          <mat-form-field appearance="outline">
+            <mat-label>Bearer token</mat-label>
+            <textarea
+              matInput
+              formControlName="directToken"
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="2"
+              cdkAutosizeMaxRows="4"
+              placeholder="eyJhbGciOi..."
+            ></textarea>
+            @if (connectionForm.controls.directToken.touched && connectionForm.controls.directToken.hasError('required')) {
+              <mat-error>Le token bearer est obligatoire.</mat-error>
+            }
+          </mat-form-field>
+        }
+
+        @if (authMode() === 'basic-auth') {
+          <div class="field-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Nom d'utilisateur</mat-label>
+              <input matInput formControlName="username" autocomplete="on" />
+              @if (connectionForm.controls.username.touched && connectionForm.controls.username.hasError('required')) {
+                <mat-error>Le nom d'utilisateur est obligatoire.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Mot de passe</mat-label>
+              <input matInput type="password" formControlName="password" autocomplete="current-password" />
+              @if (connectionForm.controls.password.touched && connectionForm.controls.password.hasError('required')) {
+                <mat-error>Le mot de passe est obligatoire.</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        }
+
+        @if (authMode() === 'oauth-client-credentials') {
+          <mat-form-field appearance="outline">
+            <mat-label>Endpoint de token</mat-label>
+            <input matInput formControlName="tokenEndpoint" placeholder="/oauth/token" />
+            <mat-hint>Chemin relatif ou URL absolue vers l'endpoint OAuth2.</mat-hint>
+            @if (connectionForm.controls.tokenEndpoint.touched && connectionForm.controls.tokenEndpoint.hasError('required')) {
+              <mat-error>L'endpoint de token est obligatoire.</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="toggle-section">
+            <span class="section-label">Source des credentials client</span>
+            <mat-button-toggle-group
+              formControlName="credentialMode"
+              class="toggle-group"
+              aria-label="Source des credentials client"
+            >
+              <mat-button-toggle value="client-secret">Client ID / Secret</mat-button-toggle>
+              <mat-button-toggle value="basic-token">Basic token</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          @if (credentialMode() === 'client-secret') {
+            <div class="field-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Client ID</mat-label>
+                <input matInput formControlName="clientId" autocomplete="off" />
+                @if (connectionForm.controls.clientId.touched && connectionForm.controls.clientId.hasError('required')) {
+                  <mat-error>Le client ID est obligatoire.</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Client secret</mat-label>
+                <input matInput type="password" formControlName="clientSecret" autocomplete="off" />
+                @if (connectionForm.controls.clientSecret.touched && connectionForm.controls.clientSecret.hasError('required')) {
+                  <mat-error>Le client secret est obligatoire.</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          }
+
+          @if (credentialMode() === 'basic-token') {
+            <mat-form-field appearance="outline">
+              <mat-label>Basic token client</mat-label>
+              <textarea
+                matInput
+                formControlName="clientBasicToken"
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="2"
+                cdkAutosizeMaxRows="3"
+                placeholder="Basic Y2xpZW50SWQ6Y2xpZW50U2VjcmV0"
+              ></textarea>
+              <mat-hint>Vous pouvez coller la valeur brute ou déjà préfixée par `Basic`.</mat-hint>
+              @if (
+                connectionForm.controls.clientBasicToken.touched &&
+                connectionForm.controls.clientBasicToken.hasError('required')
+              ) {
+                <mat-error>Le basic token client est obligatoire.</mat-error>
+              }
+            </mat-form-field>
+          }
+
+          <mat-form-field appearance="outline">
+            <mat-label>Scope optionnel</mat-label>
+            <input matInput formControlName="scope" placeholder="logging.read" autocomplete="off" />
+          </mat-form-field>
+        }
+
+        @if (authError(); as errorMessage) {
+          <div class="feedback feedback--error" aria-live="assertive">
+            <mat-icon>error</mat-icon>
+            <span>{{ errorMessage }}</span>
+          </div>
+        }
+
+        <div class="actions">
+          <button mat-flat-button type="submit" class="primary-action" [disabled]="isAuthenticating()">
+            @if (isAuthenticating()) {
+              Authentification...
+            } @else {
+              Se connecter et charger les loggers
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="panel aside app-card">
+    <mat-card-header class="panel-header">
+      <mat-card-title>État de la session</mat-card-title>
+      <mat-card-subtitle>{{ sessionSummary() }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="status-list">
+        <div>
+          <span class="label">Cible</span>
+          <code>{{ connectionForm.controls.baseUrl.value || 'Non renseignée' }}</code>
+        </div>
+        <div>
+          <span class="label">Endpoint Actuator</span>
+          <code>{{ connectionForm.controls.actuatorPath.value }}</code>
+        </div>
+        <div>
+          <span class="label">Mode</span>
+          <span>{{ currentSession()?.label ?? 'Aucun' }}</span>
+        </div>
+        @if (currentSession()?.tokenPreview; as tokenPreview) {
+          <div>
+            <span class="label">Token</span>
+            <code>{{ tokenPreview }}</code>
+          </div>
+        }
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="hint-box" aria-live="polite">
+        <mat-icon>info</mat-icon>
+        <p class="text">
+          L'application est pensée pour GitHub Pages. La cible Spring doit donc accepter les appels CORS
+          depuis votre domaine Pages.
+        </p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</section>

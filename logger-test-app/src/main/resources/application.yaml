@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: logger-test-app
+
+management:
+  endpoints:
+    web:
+      base-path: /management
+      exposure:
+        include:
+          - loggers
+      cors:
+        allowed-origins:
+          - http://localhost:4200
+        allowed-methods:
+          - GET
+          - POST
+          - PUT
+          - PATCH
+        allowed-headers:
+          - "*"

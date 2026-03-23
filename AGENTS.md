@@ -1,3 +1,4 @@
+# Agents.md
 
 You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
@@ -53,3 +54,24 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Design services around a single responsibility
 - Use the `providedIn: 'root'` option for singleton services
 - Use the `inject()` function instead of constructor injection
+
+## Project
+
+- When adding styles, check if they can be globalized in `src/styles.scss` or if an existing style could be reused
+- Use `provideZonelessChangeDetection()` in `appConfig`
+- Prioritize Angular Material components; check for existing implementations before creating custom features
+- Prioritize 'px' over 'rem' or other metrics system
+- Use nested SCSS selectors for style encapsulation instead of BEM naming conventions
+- All styles (global and component-scoped) must maintain proper SCSS encapsulation using nested selectors:
+
+```scss
+.example {
+  padding: 1rem;
+
+  .example-child {
+    margin-top: 0.5rem;
+  }
+}
+```
+
+This ensures styles are scoped to their parent container and prevents unintended style conflicts across the application.

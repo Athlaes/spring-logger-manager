@@ -1,0 +1,163 @@
+:host {
+  display: block;
+}
+
+.panel {
+  border: 1px solid var(--app-panel-border);
+  box-shadow: var(--app-panel-shadow);
+
+  mat-card-header {
+    padding-bottom: 0.85rem;
+  }
+
+  mat-card-header + mat-card-content {
+    padding-top: 0.85rem;
+  }
+
+  &.loggers-panel {
+    align-self: start;
+  }
+
+  .loggers-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.25rem;
+
+    .filter {
+      flex: 1 1 420px;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .loggers-count {
+      color: var(--app-text-strong);
+      font-weight: 600;
+    }
+  }
+
+  .feedback {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+
+    &--error {
+      margin-top: 1rem;
+      border: 1px solid rgb(198 40 40 / 0.16);
+      background: var(--app-surface-error);
+      color: #8e0000;
+    }
+  }
+
+  .empty-state {
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    color: #35563a;
+
+    mat-icon {
+      width: 3rem;
+      height: 3rem;
+      font-size: 3rem;
+    }
+
+    .title,
+    .description {
+      margin: 0;
+    }
+  }
+
+  .logger-list {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0;
+    padding: 0;
+    list-style: none;
+
+    .logger-row {
+      display: grid;
+      gap: 1.1rem;
+      padding: 1.25rem 1.4rem;
+      border: 1px solid rgb(27 94 32 / 0.08);
+      border-radius: 1rem;
+      background: rgb(255 255 255 / 0.86);
+
+      .title {
+        margin: 0;
+      }
+
+      .meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 1.25rem;
+      }
+
+      .status {
+        color: #2e7d32;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+
+        .level-button {
+          min-width: 5.75rem;
+          padding: 0.5rem 0.9rem;
+          border-radius: 999px;
+
+          &.level--trace   { color: var(--level-trace-fg);   border-color: var(--level-trace-fg);   }
+          &.level--debug   { color: var(--level-debug-fg);   border-color: var(--level-debug-fg);   }
+          &.level--info    { color: var(--level-info-fg);    border-color: var(--level-info-fg);    }
+          &.level--warn    { color: var(--level-warn-fg);    border-color: var(--level-warn-fg);    }
+          &.level--error   { color: var(--level-error-fg);   border-color: var(--level-error-fg);   }
+          &.level--fatal   { color: var(--level-fatal-fg);   border-color: var(--level-fatal-fg);   }
+          &.level--off     { color: var(--level-off-fg);     border-color: var(--level-off-fg);     }
+          &.level--inherit { color: var(--level-inherit-fg); border-color: var(--level-inherit-fg); }
+
+          &.active {
+            color: white;
+
+            &.level--trace   { background: var(--level-trace-fg);   border-color: var(--level-trace-fg);   }
+            &.level--debug   { background: var(--level-debug-fg);   border-color: var(--level-debug-fg);   }
+            &.level--info    { background: var(--level-info-fg);    border-color: var(--level-info-fg);    }
+            &.level--warn    { background: var(--level-warn-fg);    border-color: var(--level-warn-fg);    }
+            &.level--error   { background: var(--level-error-fg);   border-color: var(--level-error-fg);   }
+            &.level--fatal   { background: var(--level-fatal-fg);   border-color: var(--level-fatal-fg);   }
+            &.level--off     { background: var(--level-off-fg);     border-color: var(--level-off-fg);     }
+            &.level--inherit { background: var(--level-inherit-fg); border-color: var(--level-inherit-fg); }
+          }
+
+          &.effective:not(.active) {
+            box-shadow: inset 0 -3px 0 currentColor;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .panel {
+    .logger-list {
+      .logger-row {
+        .meta {
+          flex-direction: column;
+        }
+      }
+    }
+  }
+}

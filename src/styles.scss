@@ -1,1 +1,91 @@
-/* You can add global styles to this file, and also import other style files */
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme((color: (primary: mat.$spring-green-palette,
+        tertiary: mat.$chartreuse-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    ));
+}
+
+:root {
+  --app-panel-border: rgb(27 94 32 / 0.08);
+  --app-panel-shadow: 0 18px 40px rgb(27 94 32 / 0.08);
+  --app-text-strong: #103b17;
+  --app-text-muted: #48634d;
+  --app-text-success: #1b5e20;
+  --app-surface-success: rgb(46 125 50 / 0.12);
+  --app-surface-info: rgb(27 94 32 / 0.06);
+  --app-surface-error: rgb(255 235 238 / 0.85);
+
+  // Logger level colors
+  --level-trace-fg: #546e7a;
+  --level-trace-bg: #e0ecef;
+  --level-debug-fg: #1565c0;
+  --level-debug-bg: #deeaf8;
+  --level-info-fg: #2e7d32;
+  --level-info-bg: rgb(46 125 50 / 0.12);
+  --level-warn-fg: #bf360c;
+  --level-warn-bg: #fbe9e0;
+  --level-error-fg: #b71c1c;
+  --level-error-bg: #fde8e8;
+  --level-fatal-fg: #4a148c;
+  --level-fatal-bg: #ede7f6;
+  --level-off-fg: #37474f;
+  --level-off-bg: #e7ecef;
+  --level-inherit-fg: #3e4db8;
+  --level-inherit-bg: #eaebf8;
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background:
+    radial-gradient(circle at top, rgb(76 175 80 / 0.18), transparent 32%),
+    linear-gradient(180deg, #f4fbf5 0%, #e8f5e9 100%);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  min-height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+code {
+  font-family: Consolas, 'Courier New', monospace;
+}
+
+.app-card {
+  mat-card-header {
+    padding: 16px 16px;
+
+    mat-card-subtitle {
+      margin-top: 8px;
+    }
+
+  }
+}
