@@ -75,3 +75,9 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 ```
 
 This ensures styles are scoped to their parent container and prevents unintended style conflicts across the application.
+
+- Minimize signal usage to only what is necessary to maximize service readability and reduce bundle size; avoid patterns like:
+
+```ts
+protected readonly authMode = computed(() => this.authModeValue());
+```
