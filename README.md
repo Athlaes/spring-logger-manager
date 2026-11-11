@@ -2,7 +2,7 @@
 
 > A lightweight Angular web app to manage Spring Boot loggers in real time via Spring Actuator — no backend, no account, no dependency.
 
-**Live app:** [athlaes.github.io/spring-logger-manager](https://athlaes.github.io/spring-logger-manager/)
+**Live app:** [athlaes.github.io/spring-logger-manager](https://spring-logger-manager.athlaes.dev)
 
 ---
 
@@ -22,7 +22,7 @@
 
 ## Quick start
 
-1. Open [athlaes.github.io/spring-logger-manager](https://athlaes.github.io/spring-logger-manager/) (or your self-hosted instance).
+1. Open [athlaes.github.io/spring-logger-manager](https://spring-logger-manager.athlaes.dev) (or your self-hosted instance).
 2. Enter your Spring Boot **base URL** (e.g. `http://localhost:8080`).
 3. Enter the **Actuator path** (e.g. `/actuator` or `/management`).
 4. Select your **authentication mode** and fill in any credentials.
@@ -49,7 +49,7 @@ management:
           - loggers
       cors:
         allowed-origins:
-          - https://athlaes.github.io
+          - https://spring-logger-manager.athlaes.dev
         allowed-methods:
           - GET
           - POST
@@ -61,7 +61,7 @@ management:
 
 ### Using a self-hosted instance
 
-Replace `https://athlaes.github.io` with your own origin (e.g. `http://localhost:4200` for local dev, or your custom domain).
+Replace `https://spring-logger-manager.athlaes.dev` with your own origin (e.g. `http://localhost:4200` for local dev, or your custom domain).
 
 ---
 
@@ -106,7 +106,7 @@ The included GitHub Actions workflow (`.github/workflows/deploy-pages.yml`) will
 ## Tech stack
 
 | Layer | Technology |
-|---|---|
+| --- | --- |
 | Framework | Angular 21 (standalone, signals, zoneless) |
 | UI | Angular Material 21 |
 | Auth | Manual HTTP headers (Basic, Bearer, OAuth2 ROPC) |

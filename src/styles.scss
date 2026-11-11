@@ -1,91 +1,248 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
-
 html {
   height: 100%;
-  @include mat.theme((color: (primary: mat.$spring-green-palette,
-        tertiary: mat.$chartreuse-palette,
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$cyan-palette,
+        tertiary: mat.$green-palette,
       ),
-      typography: Roboto,
+      typography: 'Manrope',
       density: 0,
-    ));
+    )
+  );
+  @include mat.theme-overrides(
+    (
+      primary: #285d50,
+      on-primary: #ffffff,
+      primary-container: #e0ece5,
+      on-primary-container: #183c32,
+      surface: #ffffff,
+      surface-container: #f1f2ed,
+      surface-container-low: #fafbf8,
+      on-surface: #202e29,
+      on-surface-variant: #59645c,
+      outline: #808a82,
+      outline-variant: #dce0d8,
+    )
+  );
 }
-
 :root {
-  --app-panel-border: rgb(27 94 32 / 0.08);
-  --app-panel-shadow: 0 18px 40px rgb(27 94 32 / 0.08);
-  --app-text-strong: #103b17;
-  --app-text-muted: #48634d;
-  --app-text-success: #1b5e20;
-  --app-surface-success: rgb(46 125 50 / 0.12);
-  --app-surface-info: rgb(27 94 32 / 0.06);
-  --app-surface-error: rgb(255 235 238 / 0.85);
-
-  // Logger level colors
-  --level-trace-fg: #546e7a;
-  --level-trace-bg: #e0ecef;
-  --level-debug-fg: #1565c0;
-  --level-debug-bg: #deeaf8;
-  --level-info-fg: #2e7d32;
-  --level-info-bg: rgb(46 125 50 / 0.12);
-  --level-warn-fg: #bf360c;
-  --level-warn-bg: #fbe9e0;
-  --level-error-fg: #b71c1c;
-  --level-error-bg: #fde8e8;
-  --level-fatal-fg: #4a148c;
-  --level-fatal-bg: #ede7f6;
-  --level-off-fg: #37474f;
-  --level-off-bg: #e7ecef;
-  --level-inherit-fg: #3e4db8;
-  --level-inherit-bg: #eaebf8;
+  --app-background: #f6f5f0;
+  --app-accent: #285d50;
+  --app-panel-border: #dddfd7;
+  --app-text-strong: #202e29;
+  --app-text-muted: #626b62;
+  --app-text-success: #285d50;
+  --app-surface-info: #f2f4ef;
+  --app-surface-error: #fff0ed;
+  --app-font-mono: 'IBM Plex Mono', Consolas, monospace;
+  --level-trace-fg: #50616b;
+  --level-debug-fg: #245f9e;
+  --level-info-fg: #285d50;
+  --level-warn-fg: #93551a;
+  --level-error-fg: #ae3731;
+  --level-fatal-fg: #733d8b;
+  --level-off-fg: #53605a;
+  --level-inherit-fg: #626b62;
 }
-
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
   color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background:
-    radial-gradient(circle at top, rgb(76 175 80 / 0.18), transparent 32%),
-    linear-gradient(180deg, #f4fbf5 0%, #e8f5e9 100%);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
   margin: 0;
   min-height: 100%;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-code {
-  font-family: Consolas, 'Courier New', monospace;
-}
-
-.app-card {
-  mat-card-header {
-    padding: 16px 16px;
-
+  background: var(--app-background);
+  color: var(--app-text-strong);
+  font:
+    14px / 1.5 'Manrope',
+    'Segoe UI',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+  code {
+    font-family: var(--app-font-mono);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+  :focus-visible {
+    outline: 2px solid var(--app-accent);
+    outline-offset: 4px;
+  }
+  ::selection {
+    background: #dce9d5;
+    color: #202e29;
+  }
+  .app-card {
+    border: 1px solid var(--app-panel-border);
+    border-radius: 12px;
+    box-shadow: 0 3px 0 rgb(32 46 41 / 2%);
+    background: #fff;
+    min-width: 0;
+    mat-card-header {
+      padding: 24px 28px;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    mat-card-title {
+      font-size: 18px;
+      font-weight: 650;
+      letter-spacing: -0.5px;
+      h2 {
+        margin: 0;
+        font: inherit;
+      }
+    }
     mat-card-subtitle {
-      margin-top: 8px;
+      margin-top: 5px;
+      color: var(--app-text-muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    mat-card-content {
+      padding: 0 28px 28px;
+      &:last-child {
+        padding-bottom: 28px;
+      }
+    }
+    .section-index {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--app-panel-border);
+      border-radius: 8px;
+      color: var(--app-text-muted);
+      font: 11px var(--app-font-mono);
+    }
+    mat-form-field {
+      width: 100%;
+      min-width: 0;
+      @include mat.form-field-overrides(
+        (
+          outlined-container-shape: 8px,
+          subscript-text-size: 11px,
+        )
+      );
+    }
+    .mat-mdc-button-base {
+      border-radius: 7px;
+      letter-spacing: 0;
+    }
+    .hint-box {
+      display: flex;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--app-surface-info);
+      border-radius: 8px;
+      color: var(--app-text-muted);
+      font-size: 12px;
+      line-height: 1.7;
+      mat-icon {
+        flex-shrink: 0;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+      }
+      .text {
+        margin: 0;
+      }
+    }
+    .empty-state {
+      display: grid;
+      justify-items: center;
+      gap: 12px;
+      padding: 44px 16px;
+      text-align: center;
+      border: 1px dashed var(--app-panel-border);
+      border-radius: 8px;
+      background: radial-gradient(ellipse at center, #f2f5ed 0%, #fff 70%);
+      .empty-icon {
+        display: grid;
+        place-items: center;
+        width: 56px;
+        height: 56px;
+        border: 1px solid #dce3d6;
+        border-radius: 16px;
+        background: #edf2e6;
+        color: var(--app-accent);
+        mat-icon {
+          width: 28px;
+          height: 28px;
+          font-size: 28px;
+        }
+      }
+      .empty-label {
+        margin: 8px 0 0;
+        color: var(--app-text-muted);
+        font: 10px var(--app-font-mono);
+        letter-spacing: 1.5px;
+      }
+      .title {
+        margin: 0;
+        font-size: 21px;
+        font-weight: 600;
+        letter-spacing: -0.6px;
+      }
+      .description {
+        margin: 0;
+        max-width: 440px;
+        color: var(--app-text-muted);
+        font-size: 13px;
+        line-height: 1.8;
+      }
+      .empty-levels {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 12px;
+        span {
+          padding: 4px 8px;
+          border: 1px solid var(--app-panel-border);
+          border-radius: 4px;
+          color: var(--app-text-muted);
+          font: 9px var(--app-font-mono);
+        }
+      }
     }
 
+    .feedback {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid #efcac3;
+      background: var(--app-surface-error);
+      color: #9b2d25;
+      border-radius: 8px;
+      overflow-wrap: anywhere;
+      mat-icon {
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+@media (max-width: 600px) {
+  body .app-card {
+    mat-card-header {
+      padding: 20px;
+    }
+    mat-card-content {
+      padding: 0 20px 20px;
+      &:last-child {
+        padding-bottom: 20px;
+      }
+    }
   }
 }

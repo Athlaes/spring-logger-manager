@@ -1,72 +1,114 @@
-<mat-card class="panel loggers-panel app-card">
+<mat-card class="panel app-card">
   <mat-card-header>
-    <mat-card-title>Loggers Spring</mat-card-title>
-    <mat-card-subtitle>
-      Liste filtrable des loggers avec changement de niveau immédiat.
-    </mat-card-subtitle>
+    <span class="section-index" aria-hidden="true">02</span>
+    <div>
+      <mat-card-title><h2>Explorer les loggers</h2></mat-card-title>
+      <mat-card-subtitle
+        >Trouvez le bon logger. Réglez le niveau. L’effet est immédiat.</mat-card-subtitle
+      >
+    </div>
   </mat-card-header>
-
   <mat-card-content>
     <div class="loggers-toolbar">
-      <mat-form-field appearance="outline" class="filter">
-        <mat-label>Filtrer les loggers</mat-label>
-        <input matInput [formControl]="filterForm.controls.search" placeholder="Exemple: org.springframework" />
+      <mat-form-field appearance="outline" class="filter" subscriptSizing="dynamic">
+        <mat-label>Rechercher un logger ou un niveau</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          [formControl]="filterForm.controls.search"
+          placeholder="org.springframework, DEBUG…"
+        />
         @if (filterForm.controls.search.value) {
-          <button mat-icon-button matSuffix type="button" aria-label="Effacer le filtre" (click)="clearSearch()">
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            aria-label="Effacer le filtre"
+            (click)="clearSearch()"
+          >
             <mat-icon>close</mat-icon>
           </button>
         }
       </mat-form-field>
-
       <div class="toolbar-actions">
-        <span class="loggers-count">{{ loggerCountLabel() }}</span>
-        <button mat-stroked-button type="button" [disabled]="session() === null || isBusy()" (click)="refreshLoggers()">
-          Rafraîchir
+        <span class="loggers-count" role="status">{{ loggerCountLabel() }}</span>
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="session() === null || isBusy()"
+          (click)="refreshLoggers()"
+        >
+          <mat-icon>refresh</mat-icon>Actualiser
         </button>
       </div>
     </div>
-
     @if (isLoadingLoggers()) {
-      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <mat-progress-bar mode="indeterminate" aria-label="Chargement des loggers"></mat-progress-bar>
     }
-
     @if (requestError(); as requestErrorMessage) {
-      <div class="feedback feedback--error" aria-live="assertive">
-        <mat-icon>error</mat-icon>
-        <span>{{ requestErrorMessage }}</span>
+      <div class="feedback" role="alert">
+        <mat-icon>error_outline</mat-icon><span>{{ requestErrorMessage }}</span>
       </div>
     }
-
     @if (session() === null) {
       <div class="empty-state">
-        <mat-icon>vpn_key</mat-icon>
-        <h2 class="title">Connectez-vous pour charger les loggers</h2>
+        <div class="empty-icon"><mat-icon>graphic_eq</mat-icon></div>
+        <p class="empty-label">PRÊT À ÉCOUTER</p>
+        <h3 class="title">Vos loggers vous attendent.</h3>
         <p class="description">
-          Une fois la cible Spring configurée, l'application interrogera l'endpoint Actuator pour afficher
-          tous les loggers disponibles.
+          Connectez votre application ci-dessus pour retrouver<br class="desktop-break" />
+          vos loggers et ajuster leur niveau à la volée.
         </p>
+        <div class="empty-levels" aria-hidden="true">
+          <span>TRACE</span><span>DEBUG</span><span>INFO</span><span>WARN</span><span>ERROR</span>
+        </div>
+      </div>
+    } @else if (isLoadingLoggers() && loggers().length === 0) {
+      <div class="empty-state" role="status">
+        <div class="empty-icon"><mat-icon>sync</mat-icon></div>
+        <h3 class="title">À l’écoute de votre application…</h3>
+        <p class="description">Récupération des loggers en cours.</p>
       </div>
     } @else if (filteredLoggers().length === 0) {
       <div class="empty-state">
-        <mat-icon>search_off</mat-icon>
-        <h2 class="title">Aucun logger à afficher</h2>
-        <p class="description">Vérifiez le filtre courant ou rechargez la liste après authentification.</p>
+        <div class="empty-icon"><mat-icon>search_off</mat-icon></div>
+        <h3 class="title">Aucun logger à afficher</h3>
+        <p class="description">
+          {{
+            requestError()
+              ? 'Vérifiez la connexion, puis réessayez avec Actualiser.'
+              : 'Essayez une autre recherche ou actualisez la liste.'
+          }}
+        </p>
+        @if (filterForm.controls.search.value) {
+          <button mat-stroked-button type="button" (click)="clearSearch()">
+            Effacer la recherche
+          </button>
+        }
       </div>
     } @else {
+      <div class="list-heading">
+        <span>LOGGER / NIVEAU EFFECTIF</span
+        ><span class="legend">Bouton plein : niveau configuré · Souligné : niveau effectif</span>
+      </div>
       <ul class="logger-list">
         @for (logger of filteredLoggers(); track logger.name) {
-          <li class="logger-row">
+          <li class="logger-row" [class.root-logger]="logger.name === 'ROOT'">
             <div class="meta">
-              <div>
-                <h3 class="title">{{ logger.name }}</h3>
+              <h3 class="title">{{ logger.name }}</h3>
+              <div class="logger-detail">
+                <span
+                  >Effectif <strong>{{ logger.effectiveLevel }}</strong></span
+                >
+                @if (logger.configuredLevel === null) {
+                  <span class="inherited">Hérité du parent</span>
+                }
+                @if (activeLoggerUpdate() === logger.name) {
+                  <span class="status" role="status">Mise à jour…</span>
+                }
               </div>
-
-              @if (activeLoggerUpdate() === logger.name) {
-                <span class="status">Mise à jour...</span>
-              }
             </div>
-
-            <div class="actions" aria-label="Niveaux disponibles">
+            <div class="actions" role="group" [attr.aria-label]="'Niveau de ' + logger.name">
               @for (level of actionLevels(); track level) {
                 <button
                   mat-stroked-button
@@ -75,10 +117,12 @@
                   [class]="levelClass(level)"
                   [class.active]="isLevelSelected(logger, level)"
                   [class.effective]="isEffectiveLevel(logger, level)"
+                  [attr.aria-pressed]="isLevelSelected(logger, level)"
+                  [attr.aria-label]="level === 'INHERIT' ? 'Hériter du niveau parent' : level"
                   [disabled]="isBusy()"
                   (click)="updateLoggerLevel(logger, level)"
                 >
-                  {{ level }}
+                  {{ level === 'INHERIT' ? 'HÉRITER' : level }}
                 </button>
               }
             </div>
